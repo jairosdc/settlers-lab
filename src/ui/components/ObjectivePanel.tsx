@@ -1,0 +1,2 @@
+import type { GameState } from '../../engine/types'
+export function ObjectivePanel({ state }: { state: GameState }) { return <section className="panel"><h2>Objetivos</h2>{state.objectives.map(o=><div key={o.id} className={o.completed?'done objective':'objective'}>{o.completed?'✅':'⬜'} <strong>{o.title}</strong><small>{o.description}</small></div>)}{state.mvpCompleted && <p className="success">Has estabilizado tu primera ciudad industrial. Fin del MVP.</p>}</section> }

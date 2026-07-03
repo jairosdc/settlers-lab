@@ -1,32 +1,52 @@
-# React + TypeScript + Vite
+# Settlers Lab
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Settlers Lab es un MVP web de simulación incremental/city-builder en español. El jugador construye una pequeña ciudad industrial temprana, asigna trabajadores, conecta edificios con caminos, gestiona recursos y sobrevive a amenazas de bandidos.
 
-Currently, two official plugins are available:
+## Instalar y ejecutar
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Para compilar producción:
+
+```bash
+npm run build
+```
+
+## Estructura
+
+- `src/engine/`: lógica pura del juego: ciudad, producción, trabajadores, investigación, amenazas, guardado y tick.
+- `src/data/`: definiciones declarativas de recursos, edificios, objetivos y tecnologías.
+- `src/ui/components/`: paneles reutilizables de interfaz.
+- `src/ui/screens/GameScreen.tsx`: composición de la pantalla principal y persistencia local.
+
+## Mecánicas actuales
+
+- Cuadrícula 10x10 con centro urbano inicial.
+- Edificios: casa, campamento maderero, granja, cantera, escuela, almacén, cuartel, muralla y camino.
+- Producción automática por tick, consumo, capacidad y tasas netas por minuto.
+- Caminos como red logística: edificios conectados producen al 100%, desconectados al 60%.
+- Trabajadores asignables a edificios productivos.
+- Objetivos iniciales y condición de fin del MVP.
+- Investigación con asesor nivel 0, diagnóstico básico y recomendador simple.
+- Amenazas de bandidos con cuenta atrás y resolución por defensa.
+- Autoguardado en `localStorage`, guardado/carga manual, reinicio, exportación e importación JSON versionada (`0.1.0`).
+
+## Controles
+
+1. Selecciona un edificio en el panel de construcción.
+2. Pulsa una celda vacía de la cuadrícula para construir si tienes recursos suficientes.
+3. Asigna trabajadores con los botones `+` y `-`.
+4. Usa caminos para conectar edificios al centro urbano.
+5. Mantén comida positiva y prepara defensa para los ataques.
+
+## Roadmap
+
+- Tests Vitest para motor puro.
+- Gráficas de producción y cuellos de botella.
+- Grafo logístico ponderado y costes de transporte.
+- Optimizador de trabajadores sugerido, no automático.
+- Eventos y cadenas productivas más profundas.
+- Despliegue en GitHub Pages: configurar `base` en `vite.config.ts`, publicar `dist/` con GitHub Actions o `gh-pages`.

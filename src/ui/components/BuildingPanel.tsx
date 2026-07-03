@@ -1,0 +1,4 @@
+import { buildingDefinitions } from '../../data/buildings'
+import { getBuildingAt } from '../../engine/city'
+import type { GameState } from '../../engine/types'
+export function BuildingPanel({ state }: { state: GameState }) { const b = state.selectedTile ? getBuildingAt(state,state.selectedTile.x,state.selectedTile.y) : undefined; if(!b) return <section className="panel"><h2>Celda</h2><p>Selecciona una celda o elige un edificio para construir.</p></section>; const d=buildingDefinitions[b.type]; return <section className="panel"><h2>{d.icon} {d.name}</h2><p>{d.description}</p><p>Eficiencia logística: <strong>{Math.round(b.efficiency*100)}%</strong></p>{!b.connected && d.requiresConnection && <p className="warning">Este edificio necesita estar conectado para producir al máximo.</p>}<p>Trabajadores: {b.workers}/{d.maxWorkers}</p></section> }
