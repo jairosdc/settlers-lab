@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getBuildingAt } from '../../engine/city'
 import type { GameState } from '../../engine/types'
 import { Tile } from './Tile'

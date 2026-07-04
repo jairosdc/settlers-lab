@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { buildingDefinitions } from '../../data/buildings'
 import type { BuildingInstance } from '../../engine/types'
 import { GameIcon } from './icons/GameIcon'

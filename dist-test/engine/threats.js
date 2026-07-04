@@ -1,5 +1,5 @@
-import { threatNames } from '../data/threats';
-import { resolveAttack } from './military';
+import { threatNames } from '../data/threats.js';
+import { resolveAttack } from './military.js';
 export function updateThreats(state, seconds) { let nextThreatIn = state.nextThreatIn - seconds; let threats = state.threats.map(t => ({ ...t, secondsUntilAttack: t.secondsUntilAttack - seconds })); let next = { ...state, nextThreatIn, threats }; if (nextThreatIn <= 0 && threats.length === 0) {
     const strength = Math.round(18 + state.attacksSurvived * 9 + state.time / 180);
     const threat = { id: crypto.randomUUID(), name: threatNames[state.attacksSurvived % threatNames.length], strength, secondsUntilAttack: 120, target: 'resources' };

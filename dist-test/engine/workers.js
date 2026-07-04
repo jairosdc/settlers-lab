@@ -1,5 +1,5 @@
-import { buildingDefinitions } from '../data/buildings';
-import { availableWorkers } from './city';
+import { buildingDefinitions } from '../data/buildings.js';
+import { availableWorkers } from './city.js';
 export function changeWorkers(state, uid, delta) {
     const b = state.buildings.find((item) => item.uid === uid);
     if (!b)
