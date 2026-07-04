@@ -1,7 +1,16 @@
 import type { ResourceDefinition, ResourceId } from '../engine/types'
 export const resources: Record<ResourceId, ResourceDefinition> = {
-  wood:{id:'wood',name:'Madera',category:'basic',initiallyVisible:true,storage:true,baseCapacity:160}, food:{id:'food',name:'Comida',category:'basic',initiallyVisible:true,storage:true,baseCapacity:160}, stone:{id:'stone',name:'Piedra',category:'basic',initiallyVisible:true,storage:true,baseCapacity:140},
-  planks:{id:'planks',name:'Tablones',category:'intermediate',initiallyVisible:false,storage:true,baseCapacity:90,unlockedBy:'sawmill'}, tools:{id:'tools',name:'Herramientas',category:'intermediate',initiallyVisible:false,storage:true,baseCapacity:60,unlockedBy:'toolmaker'}, ore:{id:'ore',name:'Mineral',category:'intermediate',initiallyVisible:false,storage:true,baseCapacity:80,unlockedBy:'metalwork'}, metal:{id:'metal',name:'Metal',category:'advanced',initiallyVisible:false,storage:true,baseCapacity:50,unlockedBy:'metalwork'},
-  population:{id:'population',name:'Población',category:'population',initiallyVisible:true,storage:false,baseCapacity:8}, knowledge:{id:'knowledge',name:'Conocimiento',category:'advanced',initiallyVisible:true,storage:true,baseCapacity:120}, defense:{id:'defense',name:'Defensa pasiva',category:'security',initiallyVisible:true,storage:true,baseCapacity:140}, soldiers:{id:'soldiers',name:'Soldados',category:'security',initiallyVisible:false,storage:true,baseCapacity:30,unlockedBy:'barracks'},
+ wood:{id:'wood',name:'Madera',category:'basic',initiallyVisible:true,storage:true,baseCapacity:300,icon:'wood'},
+ stone:{id:'stone',name:'Piedra',category:'basic',initiallyVisible:true,storage:true,baseCapacity:260,icon:'stone'},
+ food:{id:'food',name:'Comida',category:'basic',initiallyVisible:true,storage:true,baseCapacity:240,icon:'food'},
+ population:{id:'population',name:'Población',category:'population',initiallyVisible:true,storage:false,baseCapacity:10,icon:'population'},
+ knowledge:{id:'knowledge',name:'Conocimiento',category:'advanced',initiallyVisible:true,storage:true,baseCapacity:180,icon:'knowledge'},
+ resilience:{id:'resilience',name:'Resiliencia',category:'resilience',initiallyVisible:true,storage:true,baseCapacity:100,icon:'resilience'},
+ planks:{id:'planks',name:'Tablones',category:'intermediate',initiallyVisible:false,storage:true,baseCapacity:160,unlockedBy:'basic_carpentry',icon:'planks'},
+ bricks:{id:'bricks',name:'Ladrillos',category:'intermediate',initiallyVisible:false,storage:true,baseCapacity:140,unlockedBy:'brickmaking',icon:'bricks'},
+ metal:{id:'metal',name:'Metal',category:'advanced',initiallyVisible:false,storage:true,baseCapacity:100,unlockedBy:'early_metallurgy',icon:'metal'},
+ bread:{id:'bread',name:'Pan',category:'intermediate',initiallyVisible:false,storage:true,baseCapacity:120,unlockedBy:'baking',icon:'bread'},
+ tools:{id:'tools',name:'Herramientas',category:'advanced',initiallyVisible:false,storage:true,baseCapacity:80,unlockedBy:'flow_prioritization',icon:'tools'},
+ energy:{id:'energy',name:'Energía',category:'advanced',initiallyVisible:false,storage:true,baseCapacity:100,unlockedBy:'network_capacity',icon:'energy'},
 }
 export const resourceLabels = resources
