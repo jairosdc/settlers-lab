@@ -1,0 +1,6 @@
+import { defensePower } from './formulas.js';
+export function resolveAttack(state, threat) { const resources = structuredClone(state.resources); const power = defensePower(state); if (power >= threat.strength) {
+    resources.defense.amount = Math.max(0, resources.defense.amount - threat.strength * .08);
+    resources.soldiers.amount = Math.max(0, resources.soldiers.amount - threat.strength * .015);
+    return { ...state, resources, attacksSurvived: state.attacksSurvived + 1, messages: [{ id: crypto.randomUUID(), text: `Amenaza neutralizada: potencia ${power.toFixed(1)} vs fuerza ${threat.strength}.`, tone: 'success' }, ...state.messages].slice(0, 6) };
+} const lost = Math.min(resources.wood.amount, 25 + threat.strength * .6); resources.wood.amount -= lost; resources.food.amount = Math.max(0, resources.food.amount - 20); resources.planks.amount = Math.max(0, resources.planks.amount - 8); return { ...state, resources, messages: [{ id: crypto.randomUUID(), text: `La amenaza superó tus defensas (${power.toFixed(1)} < ${threat.strength}). Pierdes recursos y flujo logístico.`, tone: 'danger' }, ...state.messages].slice(0, 6) }; }
