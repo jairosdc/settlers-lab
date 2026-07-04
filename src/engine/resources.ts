@@ -1,17 +1,5 @@
-import type { ResourceId, ResourceStore } from './types'
-
-export function createInitialResources(): ResourceStore {
-  return {
-    wood: { amount: 90, capacity: 180, producedPerMinute: 0, consumedPerMinute: 0 },
-    food: { amount: 75, capacity: 180, producedPerMinute: 0, consumedPerMinute: 0 },
-    stone: { amount: 45, capacity: 160, producedPerMinute: 0, consumedPerMinute: 0 },
-    population: { amount: 6, capacity: 8, producedPerMinute: 0, consumedPerMinute: 0 },
-    knowledge: { amount: 0, capacity: 100, producedPerMinute: 0, consumedPerMinute: 0 },
-    defense: { amount: 4, capacity: 120, producedPerMinute: 0, consumedPerMinute: 0 },
-  }
-}
-
-export function addResource(resources: ResourceStore, id: ResourceId, delta: number): ResourceStore {
-  const current = resources[id]
-  return { ...resources, [id]: { ...current, amount: Math.max(0, Math.min(current.capacity, current.amount + delta)) } }
-}
+import { resources } from '../data/resources'
+import type { ResourceId, ResourceStore, TechnologyId, BuildingId } from './types'
+export function createInitialResources(): ResourceStore { const store={} as ResourceStore; (Object.keys(resources) as ResourceId[]).forEach(id=>{ store[id]={amount:id==='wood'?120:id==='food'?100:id==='stone'?55:id==='population'?6:id==='defense'?3:0,capacity:resources[id].baseCapacity,producedPerMinute:0,consumedPerMinute:0,visible:resources[id].initiallyVisible} }); return store }
+export function refreshResourceVisibility(store: ResourceStore, buildings: BuildingId[], techs: TechnologyId[]): ResourceStore { const next=structuredClone(store); (Object.keys(resources) as ResourceId[]).forEach(id=>{ const unlock=resources[id].unlockedBy; next[id].visible = next[id].visible || resources[id].initiallyVisible || (!!unlock && (buildings.includes(unlock as BuildingId) || techs.includes(unlock as TechnologyId))) || next[id].amount>0 }); return next }
+export function addResource(resources: ResourceStore, id: ResourceId, delta: number): ResourceStore { const current = resources[id]; return { ...resources, [id]: { ...current, amount: Math.max(0, Math.min(current.capacity, current.amount + delta)) } } }

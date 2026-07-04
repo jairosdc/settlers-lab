@@ -1,29 +1,6 @@
 import { buildingDefinitions } from '../data/buildings'
+import { recipes } from '../data/recipes'
+import { recipeThroughput } from './formulas'
 import type { GameState, ProductionReport, ResourceId } from './types'
-
-export function calculateProduction(state: GameState): ProductionReport {
-  const produced: Partial<Record<ResourceId, number>> = {}
-  const consumed: Partial<Record<ResourceId, number>> = {}
-  for (const b of state.buildings) {
-    const def = buildingDefinitions[b.type]
-    const workerFactor = def.maxWorkers > 0 ? b.workers : 1
-    for (const p of def.production) produced[p.resource] = (produced[p.resource] ?? 0) + p.amountPerMinute * workerFactor * b.efficiency
-    for (const c of def.consumption) consumed[c.resource] = (consumed[c.resource] ?? 0) + c.amountPerMinute * Math.max(1, workerFactor) * b.efficiency
-    if (def.passiveDefense) produced.defense = (produced.defense ?? 0) + def.passiveDefense / 60
-  }
-  const netPerMinute: Partial<Record<ResourceId, number>> = {}
-  ;(['wood','food','stone','population','knowledge','defense'] as ResourceId[]).forEach((r) => { netPerMinute[r] = (produced[r] ?? 0) - (consumed[r] ?? 0) })
-  const limitingResource = (['food','wood','stone'] as ResourceId[]).find((r) => (netPerMinute[r] ?? 0) < 0 || state.resources[r].amount < state.resources[r].capacity * 0.15)
-  return { produced, consumed, netPerMinute, limitingResource }
-}
-
-export function applyProduction(state: GameState, seconds: number): GameState {
-  const report = calculateProduction(state)
-  const resources = structuredClone(state.resources)
-  ;(Object.keys(resources) as ResourceId[]).forEach((r) => {
-    resources[r].producedPerMinute = report.produced[r] ?? 0
-    resources[r].consumedPerMinute = report.consumed[r] ?? 0
-    resources[r].amount = Math.max(0, Math.min(resources[r].capacity, resources[r].amount + ((report.netPerMinute[r] ?? 0) * seconds) / 60))
-  })
-  return { ...state, resources }
-}
+export function calculateProduction(state: GameState): ProductionReport { const produced:Partial<Record<ResourceId,number>>={}; const consumed:Partial<Record<ResourceId,number>>={}; const bottlenecks=new Set<ResourceId>(); const utilization:Record<string,number>={}; for(const b of state.buildings){ const def=buildingDefinitions[b.type]; if(def.passiveDefense) produced.defense=(produced.defense??0)+def.passiveDefense/60; const recipeId=b.activeRecipeId ?? def.recipeIds[0]; if(!recipeId) continue; const recipe=recipes[recipeId]; if(!recipe || (recipe.requiredTech&&!state.researched.includes(recipe.requiredTech))) continue; const base=def.maxWorkers>0?recipeThroughput(b):b.efficiency; let availability=1; for(const input of recipe.inputs){ const need=input.amountPerMinute*base; const stock=state.resources[input.resource].amount; if(need>0 && stock < need/6) { availability=Math.min(availability, Math.max(0, stock/(need/6))); bottlenecks.add(input.resource) } } const factor=base*availability; utilization[b.uid]=availability; for(const input of recipe.inputs) consumed[input.resource]=(consumed[input.resource]??0)+input.amountPerMinute*factor; for(const output of recipe.outputs) produced[output.resource]=(produced[output.resource]??0)+output.amountPerMinute*factor } const netPerMinute:Partial<Record<ResourceId,number>>={}; (Object.keys(state.resources) as ResourceId[]).forEach(r=>netPerMinute[r]=(produced[r]??0)-(consumed[r]??0)); const limitingResource=([...bottlenecks] as ResourceId[])[0] ?? (Object.keys(state.resources) as ResourceId[]).find(r=>state.resources[r].visible && ((netPerMinute[r]??0)<0 || state.resources[r].amount<state.resources[r].capacity*.08)); return {produced,consumed,netPerMinute,bottlenecks:[...bottlenecks],limitingResource,utilization} }
+export function applyProduction(state: GameState, seconds: number): GameState { const report=calculateProduction(state); const resources=structuredClone(state.resources); (Object.keys(resources) as ResourceId[]).forEach(r=>{resources[r].producedPerMinute=report.produced[r]??0; resources[r].consumedPerMinute=report.consumed[r]??0; resources[r].amount=Math.max(0,Math.min(resources[r].capacity,resources[r].amount+((report.netPerMinute[r]??0)*seconds)/60))}); return {...state,resources} }

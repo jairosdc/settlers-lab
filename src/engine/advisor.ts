@@ -3,16 +3,4 @@ import { resourceLabels } from '../data/resources'
 import { availableWorkers } from './city'
 import { calculateProduction } from './production'
 import type { GameState } from './types'
-export function getAdvisorMessages(state: GameState): string[] {
- if (state.advisorLevel === 0) return ['Completa objetivos para desbloquear diagnósticos.']
- const report = calculateProduction(state); const messages: string[] = []
- if ((report.netPerMinute.food ?? 0) < 0) messages.push('Falta comida: construye una granja o asigna agricultores.')
- if (state.resources.wood.amount < 20) messages.push('Falta madera: refuerza el campamento maderero.')
- if (state.resources.stone.amount < 15) messages.push('Falta piedra: construye o conecta una cantera.')
- if (availableWorkers(state) > 0) messages.push(`Tienes ${availableWorkers(state)} trabajadores sin asignar.`)
- const disconnected = state.buildings.find((b) => buildingDefinitions[b.type].requiresConnection && !b.connected)
- if (disconnected) messages.push(`Conecta ${buildingDefinitions[disconnected.type].name} con caminos para producir al 100%.`)
- const threat = state.threats[0]; if (threat && state.resources.defense.amount < threat.strength) messages.push('Defensa baja ante amenaza próxima: construye muralla o activa el cuartel.')
- if (state.advisorLevel >= 2) { const limiting = report.limitingResource; if (limiting) messages.unshift(`Recomendación: mejora ${resourceLabels[limiting].name.toLowerCase()}, ahora limita tu expansión.`) }
- return messages.length ? messages : ['La ciudad está estable. Busca crecer población y defensa.']
-}
+export function getAdvisorMessages(state: GameState): string[] { if(state.advisorLevel===0) return ['Genera conocimiento para desbloquear diagnósticos cuantitativos.']; const report=calculateProduction(state); const messages:string[]=[]; if(report.limitingResource) messages.push(`Cuello de botella: ${resourceLabels[report.limitingResource].name}. Revisa entradas, trabajadores y stock.`); if(availableWorkers(state)>0) messages.push(`Tienes ${availableWorkers(state)} trabajadores sin asignar: aumenta throughput donde el neto sea negativo.`); const disconnected=state.buildings.find(b=>buildingDefinitions[b.type].requiresConnection&&!b.connected); if(disconnected) messages.push(`${buildingDefinitions[disconnected.type].name} opera con baja eficiencia: conecta carretera adyacente al centro.`); if((report.netPerMinute.planks??0)<0) messages.push('La cadena de tablones consume más de lo que produce: añade aserradero o trabajadores.'); if(state.advisorLevel>=2){ const worst=Object.entries(report.netPerMinute).filter(([r])=>state.resources[r as keyof typeof state.resources].visible).sort((a,b)=>a[1]-b[1])[0]; if(worst) messages.unshift(`Diagnóstico STEM: recurso con peor flujo neto = ${resourceLabels[worst[0] as keyof typeof resourceLabels].name} (${worst[1].toFixed(2)}/min).`) } return messages.length?messages:['Sistema estable. Siguiente meta: aumentar cadenas intermedias sin saturar comida.'] }
