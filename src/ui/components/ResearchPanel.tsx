@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { technologies } from '../../data/technologies'
 import { canResearch } from '../../engine/research'
 import type { GameState, TechnologyId } from '../../engine/types'

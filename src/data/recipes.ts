@@ -1,8 +1,15 @@
 import type { RecipeDefinition } from '../engine/types'
 export const recipes: Record<string, RecipeDefinition> = {
- gatherWood:{id:'gatherWood',name:'Tala controlada',inputs:[],outputs:[{resource:'wood',amountPerMinute:4.2}]}, growFood:{id:'growFood',name:'Cultivo intensivo',inputs:[],outputs:[{resource:'food',amountPerMinute:5.1}]}, cutStone:{id:'cutStone',name:'Extracción de piedra',inputs:[],outputs:[{resource:'stone',amountPerMinute:3.6}]},
- sawPlanks:{id:'sawPlanks',name:'Serrar tablones',inputs:[{resource:'wood',amountPerMinute:4}],outputs:[{resource:'planks',amountPerMinute:2.2}]}, makeTools:{id:'makeTools',name:'Herramientas básicas',inputs:[{resource:'planks',amountPerMinute:1.2},{resource:'stone',amountPerMinute:0.8}],outputs:[{resource:'tools',amountPerMinute:0.75}]},
- mineOre:{id:'mineOre',name:'Minería de mineral',inputs:[{resource:'tools',amountPerMinute:0.25}],outputs:[{resource:'ore',amountPerMinute:2.1}],requiredTech:'metalwork'}, smeltMetal:{id:'smeltMetal',name:'Fundición',inputs:[{resource:'ore',amountPerMinute:2},{resource:'wood',amountPerMinute:1.5}],outputs:[{resource:'metal',amountPerMinute:0.9}],requiredTech:'metalwork'},
- teach:{id:'teach',name:'Enseñanza técnica',inputs:[{resource:'food',amountPerMinute:0.8},{resource:'planks',amountPerMinute:0.15}],outputs:[{resource:'knowledge',amountPerMinute:2}]}, research:{id:'research',name:'Investigación aplicada',inputs:[{resource:'tools',amountPerMinute:0.25},{resource:'food',amountPerMinute:0.8}],outputs:[{resource:'knowledge',amountPerMinute:4.5}],requiredTech:'industrialPlanning'},
- train:{id:'train',name:'Entrenar soldados',inputs:[{resource:'food',amountPerMinute:2},{resource:'tools',amountPerMinute:0.15}],outputs:[{resource:'soldiers',amountPerMinute:0.35},{resource:'defense',amountPerMinute:0.7}]}, housing:{id:'housing',name:'Crecimiento residencial',inputs:[{resource:'food',amountPerMinute:0.18}],outputs:[{resource:'population',amountPerMinute:0.11}]},
+ produce_wood:{id:'produce_wood',name:'Bosque gestionado',inputs:{},outputs:{wood:5},cycleSeconds:60},
+ wood_to_planks:{id:'wood_to_planks',name:'Madera a tablones',inputs:{wood:2},outputs:{planks:1},cycleSeconds:20,requiredTech:'basic_carpentry'},
+ produce_stone:{id:'produce_stone',name:'Extracción de piedra',inputs:{},outputs:{stone:4},cycleSeconds:60},
+ stone_wood_to_bricks:{id:'stone_wood_to_bricks',name:'Piedra y madera a ladrillos',inputs:{stone:2,wood:1},outputs:{bricks:1},cycleSeconds:30,requiredTech:'brickmaking'},
+ produce_food:{id:'produce_food',name:'Cultivo intensivo',inputs:{},outputs:{food:6},cycleSeconds:60},
+ food_to_bread:{id:'food_to_bread',name:'Comida a pan',inputs:{food:2},outputs:{bread:1},cycleSeconds:24,requiredTech:'baking'},
+ mine_metal:{id:'mine_metal',name:'Minería inicial',inputs:{planks:0.2},outputs:{metal:1},cycleSeconds:45,requiredTech:'early_metallurgy'},
+ housing_basic:{id:'housing_basic',name:'Vivienda básica',inputs:{food:0.3},outputs:{population:0.08},cycleSeconds:60},
+ housing_improved:{id:'housing_improved',name:'Vivienda mejorada',inputs:{planks:0.4,bricks:0.4,bread:0.2},outputs:{population:0.18},cycleSeconds:60,requiredTech:'brickmaking'},
+ teach:{id:'teach',name:'Formación técnica',inputs:{food:0.8},outputs:{knowledge:2.2},cycleSeconds:60},
+ regulate:{id:'regulate',name:'Regulación de inventario',inputs:{},outputs:{},cycleSeconds:60},
+ resilience_ops:{id:'resilience_ops',name:'Mitigación operativa',inputs:{knowledge:0.35,food:0.3},outputs:{resilience:1.8},cycleSeconds:60},
 }

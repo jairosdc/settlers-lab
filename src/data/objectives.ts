@@ -1,12 +1,9 @@
 import type { Objective } from '../engine/types'
 export function initialObjectives(): Objective[] { return [
- {id:'stable-food',title:'Balance alimentario positivo',description:'La comida neta debe ser mayor que cero.',completed:false},
- {id:'sawmill',title:'Construye un aserradero',description:'Inicia la cadena madera → tablones.',completed:false},
- {id:'planks',title:'Acumula 20 tablones',description:'Primer inventario intermedio.',completed:false},
- {id:'logistics',title:'Investiga Logística I',description:'Las carreteras conectadas aumentan eficiencia.',completed:false},
- {id:'tools',title:'Produce 5 herramientas',description:'Habilita cadenas industriales más complejas.',completed:false},
- {id:'industrial',title:'Planificación industrial',description:'Desbloquea optimización avanzada.',completed:false},
- {id:'soldiers',title:'Entrena 3 soldados',description:'Separa defensa activa de murallas.',completed:false},
- {id:'attack',title:'Sobrevive una amenaza',description:'Valida tu resiliencia.',completed:false},
- {id:'metal',title:'Produce 5 metal',description:'Cierra la primera cadena industrial completa.',completed:false},
+ {id:'plank-chain',kind:'hito',title:'Primera cadena estable de tablones',description:'Consigue producción neta positiva de tablones.',completed:false,reward:'Conocimiento y horizonte refinado'},
+ {id:'first-bottleneck',kind:'hito',title:'Primer cuello de botella resuelto',description:'Reduce los cuellos de botella activos a cero.',completed:false},
+ {id:'opt70',kind:'contrato',title:'Contrato: índice 70',description:'Mantén un índice de optimización superior a 70.',completed:false,reward:'+20 conocimiento'},
+ {id:'logistics80',kind:'contrato',title:'Contrato: logística 80%',description:'Alcanza 80% de eficiencia logística media.',completed:false},
+ {id:'resilience50',kind:'dinamico',title:'Objetivo sugerido: resiliencia operativa',description:'Sube la resiliencia por encima de 50.',completed:false},
+ {id:'horizon2',kind:'horizonte',title:'Horizonte II: Producción refinada',description:'Desbloquea tablones, ladrillos o pan. La simulación continúa.',completed:false},
 ] }

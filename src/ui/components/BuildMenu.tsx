@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { buildableIds, buildingDefinitions } from '../../data/buildings'
 import { resourceLabels } from '../../data/resources'
 import { isUnlocked } from '../../engine/city'

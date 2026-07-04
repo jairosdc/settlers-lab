@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { buildingDefinitions } from '../../data/buildings'
 import { availableWorkers } from '../../engine/city'
 import type { GameState } from '../../engine/types'

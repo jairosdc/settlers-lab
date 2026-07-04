@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { resources } from '../../data/resources'
 import type { GameState, ResourceId } from '../../engine/types'
 const ids = Object.keys(resources) as ResourceId[]

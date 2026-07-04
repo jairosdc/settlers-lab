@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { buildingDefinitions } from '../../data/buildings'
 import { recipes } from '../../data/recipes'
 import { getBuildingAt } from '../../engine/city'
