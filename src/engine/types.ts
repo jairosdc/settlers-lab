@@ -1,19 +1,27 @@
-export type ResourceCategory = 'basic' | 'intermediate' | 'advanced' | 'population' | 'security'
-export type ResourceId = 'wood' | 'food' | 'stone' | 'planks' | 'tools' | 'ore' | 'metal' | 'population' | 'knowledge' | 'defense' | 'soldiers'
-export type BuildingCategory = 'infra' | 'extractors' | 'industry' | 'civic' | 'military' | 'logistics'
-export type BuildingId = 'townCenter' | 'house' | 'lumberCamp' | 'farm' | 'quarry' | 'sawmill' | 'toolmaker' | 'mine' | 'foundry' | 'school' | 'laboratory' | 'warehouse' | 'barracks' | 'wall' | 'road'
-export type TechnologyId = 'logisticsI' | 'industrialPlanning' | 'metalwork' | 'urbanExpansion' | 'relocation' | 'tactics'
+export type ResourceCategory = 'basic' | 'intermediate' | 'advanced' | 'population' | 'resilience'
+export type ResourceId = 'wood' | 'stone' | 'food' | 'population' | 'knowledge' | 'resilience' | 'planks' | 'bricks' | 'metal' | 'bread' | 'tools' | 'energy'
+export type ProcessCategory = 'core' | 'extraction' | 'transformation' | 'civic' | 'logistics' | 'resilience'
+export type ProcessId = 'townCenter' | 'forest' | 'sawmill' | 'quarry' | 'brickworks' | 'farm' | 'bakery' | 'mine' | 'basicHousing' | 'improvedHousing' | 'school' | 'warehouse' | 'resilienceCenter' | 'workshop'
+export type BuildingId = ProcessId
+export type TechnologyId = 'basic_carpentry' | 'brickmaking' | 'baking' | 'early_metallurgy' | 'efficient_connections' | 'compacted_paths' | 'weighted_flows' | 'network_capacity' | 'logistics_redundancy' | 'basic_diagnostics' | 'simple_recommender' | 'time_estimation' | 'flow_prioritization' | 'efficiency_panel' | 'production_history' | 'trend_analysis' | 'strategic_reserves' | 'preventive_maintenance' | 'process_redundancy' | 'disturbance_mitigation'
 export type RecipeId = string
 export type ResourceStore = Record<ResourceId, { amount: number; capacity: number; producedPerMinute: number; consumedPerMinute: number; visible: boolean }>
 export interface Cost { resource: ResourceId; amount: number }
 export interface ResourceFlow { resource: ResourceId; amountPerMinute: number }
-export interface ResourceDefinition { id: ResourceId; name: string; category: ResourceCategory; initiallyVisible: boolean; storage: boolean; baseCapacity: number; unlockedBy?: BuildingId | TechnologyId }
-export interface RecipeDefinition { id: RecipeId; name: string; inputs: ResourceFlow[]; outputs: ResourceFlow[]; requiredTech?: TechnologyId; unlocksResources?: ResourceId[] }
-export interface BuildingDefinition { id: BuildingId; name: string; icon: string; description: string; category: BuildingCategory; cost: Cost[]; maxWorkers: number; recipeIds: RecipeId[]; populationCapacityBonus?: number; storageBonus?: Partial<Record<ResourceId, number>>; passiveDefense?: number; requiresConnection?: boolean; requiredTech?: TechnologyId; road?: boolean; immovable?: boolean }
-export interface TechnologyDefinition { id: TechnologyId; name: string; description: string; cost: Cost[]; prerequisites?: TechnologyId[] }
-export interface BuildingInstance { uid: string; type: BuildingId; x: number; y: number; workers: number; connected: boolean; efficiency: number; activeRecipeId?: RecipeId }
-export interface Objective { id: string; title: string; description: string; completed: boolean }
-export interface Threat { id: string; name: string; strength: number; secondsUntilAttack: number; target: 'resources' | 'workers' | 'logistics' }
+export interface ResourceDefinition { id: ResourceId; name: string; category: ResourceCategory; initiallyVisible: boolean; storage: boolean; baseCapacity: number; unlockedBy?: ProcessId | TechnologyId; icon: string }
+export interface RecipeDefinition { id: RecipeId; name: string; inputs: Partial<Record<ResourceId, number>>; outputs: Partial<Record<ResourceId, number>>; cycleSeconds: number; requiredTech?: TechnologyId }
+export interface ProcessDefinition { id: ProcessId; name: string; icon: string; description: string; category: ProcessCategory; buildCost: Partial<Record<ResourceId, number>>; maxWorkers: number; recipeId?: RecipeId; unlockedBy?: TechnologyId; logisticsSensitivity: number; baseEfficiency: number; position: { x: number; y: number }; storageBonus?: Partial<Record<ResourceId, number>>; populationCapacityBonus?: number }
+export type BuildingDefinition = ProcessDefinition & { cost: Cost[]; recipeIds: RecipeId[] }
+export interface TechnologyDefinition { id: TechnologyId; name: string; branch: 'Producción' | 'Logística' | 'Optimización' | 'Datos' | 'Resiliencia'; description: string; cost: Partial<Record<ResourceId, number>>; prerequisites?: TechnologyId[]; effects: string[]; unlocks?: Array<ResourceId | ProcessId> }
+export interface ProcessInstance { uid: string; type: ProcessId; workers: number; paused: boolean; efficiency: number; logisticsEfficiency: number; priority: number; status: ProcessStatus; stopReason?: string; x: number; y: number; connected: boolean; activeRecipeId?: RecipeId }
+export type BuildingInstance = ProcessInstance
+export interface Connection { id: string; from: ProcessId; to: ProcessId; resource: ResourceId; capacityPerMinute: number; weight: number; efficiency: number; active: boolean }
+export interface Objective { id: string; title: string; description: string; completed: boolean; kind?: 'hito' | 'contrato' | 'dinamico' | 'horizonte'; reward?: string; progress?: number }
+export interface Perturbation { id: string; name: string; type: 'logistics_failure' | 'demand_spike' | 'process_breakdown' | 'scarcity' | 'connection_block' | 'storage_saturation' | 'efficiency_loss' | 'food_crisis' | 'resource_loss'; intensity: number; secondsUntil: number; durationSeconds: number; target?: ProcessId | ResourceId; absorbed?: boolean }
+export type Threat = Perturbation
 export interface Message { id: string; text: string; tone: 'info' | 'success' | 'warning' | 'danger' }
-export interface GameState { version: string; width: number; height: number; resources: ResourceStore; buildings: BuildingInstance[]; selectedBuildingToBuild?: BuildingId; selectedTile?: { x: number; y: number }; moveBuildingUid?: string; paused: boolean; speed: 1 | 2 | 4; time: number; researched: TechnologyId[]; advisorLevel: 0 | 1 | 2; objectives: Objective[]; threats: Threat[]; nextThreatIn: number; attacksSurvived: number; messages: Message[]; mvpCompleted: boolean }
-export interface ProductionReport { produced: Partial<Record<ResourceId, number>>; consumed: Partial<Record<ResourceId, number>>; netPerMinute: Partial<Record<ResourceId, number>>; bottlenecks: ResourceId[]; limitingResource?: ResourceId; utilization: Record<string, number> }
+export interface MetricsSnapshot { time: number; optimizationScore: number; processEfficiency: number; logisticsEfficiency: number; workerUtilization: number; resourceStability: number; resilienceScore: number; activeProcessRatio: number }
+export interface OptimizationReport extends Omit<MetricsSnapshot, 'time'> { trend: number; limitingResource?: ResourceId; mainLoss: string; penalties: number; bottlenecks: string[] }
+export interface GameState { version: string; resources: ResourceStore; processes: ProcessInstance[]; buildings: ProcessInstance[]; connections: Connection[]; selectedProcessId?: string; paused: boolean; speed: 1 | 2 | 4; time: number; researched: TechnologyId[]; advisorLevel: 0 | 1 | 2 | 3; objectives: Objective[]; perturbations: Perturbation[]; threats: Perturbation[]; nextPerturbationIn: number; messages: Message[]; history: MetricsSnapshot[]; optimization: OptimizationReport; flowWeights: Record<string, Record<string, number>>; saveNotice?: string; selectedBuildingToBuild?: ProcessId; selectedTile?: {x:number;y:number}; width?: number; height?: number; mvpCompleted?: boolean; attacksSurvived?: number }
+export interface ProductionReport { produced: Partial<Record<ResourceId, number>>; consumed: Partial<Record<ResourceId, number>>; netPerMinute: Partial<Record<ResourceId, number>>; bottlenecks: ResourceId[]; limitingResource?: ResourceId; utilization: Record<string, number>; processReports: Record<string, { efficiency: number; status: ProcessStatus; stopReason?: string }> }
+export type ProcessStatus = 'Funcionando' | 'Sin trabajadores' | 'Falta input' | 'Output lleno' | 'Baja eficiencia logística' | 'Pausado' | 'Bloqueado' | 'Limitado por recurso'

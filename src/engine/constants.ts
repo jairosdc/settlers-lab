@@ -1,9 +1,6 @@
-export const SAVE_VERSION = '0.2.0-industrial-reset'
-export const SAVE_KEY = 'settlers-lab-save'
-export const GRID_WIDTH = 14
-export const GRID_HEIGHT = 12
-export const TOWN_CENTER_X = 6
-export const TOWN_CENTER_Y = 5
-export const CONNECTED_EFFICIENCY = 1
-export const DISCONNECTED_EFFICIENCY = 0.45
-export const ROAD_BONUS_PER_TECH = 0.08
+export const SAVE_VERSION = '0.3.0'
+export const SAVE_KEY = 'settlers-lab-save-v0.3.0'
+export const GRID_WIDTH = 0
+export const GRID_HEIGHT = 0
+export const TOWN_CENTER_X = 0
+export const TOWN_CENTER_Y = 0

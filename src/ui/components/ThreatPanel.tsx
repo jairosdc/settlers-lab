@@ -1,2 +1,0 @@
-import type { GameState } from '../../engine/types'
-export function ThreatPanel({ state }: { state: GameState }) { return <section className="panel"><h2>Amenazas</h2>{state.threats.length===0 ? <p>Próxima exploración enemiga en {Math.ceil(state.nextThreatIn)}s.</p> : state.threats.map(t=><p className="warning" key={t.id}>{t.name}: fuerza {t.strength}, llega en {Math.ceil(t.secondsUntilAttack)}s.</p>)}<p>Ataques sobrevividos: {state.attacksSurvived}/3</p></section> }
